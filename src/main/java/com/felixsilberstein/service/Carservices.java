@@ -6,10 +6,14 @@ import com.felixsilberstein.model.Appointment;
 import java.util.List;
 
 public interface Carservices{
-    AppointmentRepository<Appointment, Long> getAppointmentRepository();
+    AppointmentRepository getAppointmentRepository();
     List<Appointment> findAll();
 
-    Appointment findById(Long id);
+    Appointment findById(Integer id);
 
-    Long create(Appointment newAppointment);
+    Integer create(Appointment newAppointment);
+
+    void update(Appointment newInstance);
+
+    void deleteById(Integer id);
 }

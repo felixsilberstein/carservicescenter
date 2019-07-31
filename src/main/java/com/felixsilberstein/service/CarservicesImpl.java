@@ -24,13 +24,23 @@ public class CarservicesImpl implements Carservices {
     }
 
     @Override
-    public Appointment findById(Long id) {
+    public Appointment findById(Integer id) {
         return appointmentRepository.findById(id);
     }
 
     @Override
-    public Long create(Appointment newAppointment) {
+    public Integer create(Appointment newAppointment) {
         return appointmentRepository.create(newAppointment);
+    }
+
+    @Override
+    public void update(Appointment newInstance) {
+        appointmentRepository.update(newInstance);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        appointmentRepository.deleteById(id);
     }
 
 

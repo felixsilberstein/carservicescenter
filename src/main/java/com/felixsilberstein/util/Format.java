@@ -1,10 +1,10 @@
 package com.felixsilberstein.util;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Format {
-    public static String MySQLDate(Date dt) {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(dt);
+    public static Timestamp Date2MySQLTimestamp(Date dt) {
+        return new Timestamp(dt.getTime());
     }
 }

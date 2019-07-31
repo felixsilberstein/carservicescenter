@@ -4,10 +4,14 @@ import com.felixsilberstein.model.Appointment;
 
 import java.util.List;
 
-public interface AppointmentRepository<Appointment, Long> {
+public interface AppointmentRepository {
     List<Appointment> findAll();
 
-    com.felixsilberstein.model.Appointment findById(java.lang.Long id);
+    Appointment findById(Integer id);
 
-    java.lang.Long create(com.felixsilberstein.model.Appointment newAppointment);
+    Integer create(Appointment newAppointment);
+
+    void update(Appointment newInstance);
+
+    void deleteById(Integer id);
 }

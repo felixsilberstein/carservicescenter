@@ -40,7 +40,7 @@ public class AppointmentsController {
      * @return Appointment
      */
     @GetMapping(value = "/{id}")
-    public Appointment findAppointment(@PathVariable(name="id", required=true) Long id) {
+    public Appointment findAppointment(@PathVariable(name="id", required=true) Integer id) {
         return service.findById(id);
     }
 
@@ -51,20 +51,28 @@ public class AppointmentsController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long create(@RequestBody Appointment newAppointment) {
+    public Integer create(@RequestBody Appointment newAppointment) {
         AppointmentPreconditions.checkNotFound(service.findById(newAppointment.getId()));
-        newAppointment.setStatus(0);
         return service.create(newAppointment);
     }
-    /*
+
+    /**
+     * Updates an appointment
+     * @param id
+     * @param newInstance
+     * @return Updated instance
+     */
     @PutMapping(value = "/{id}")
-    public Appointment update(@PathVariable("id") Long id, @RequestBody Appointment newAppointment) {
-        Preconditions.checkNotNull(newAppointment);
-        Appointment oldAppointment = service.findById(newAppointment.getId());
-        if (oldAppointment == null) {
-            throw new ResourceNotFoundException();
-        }
-        return service.update(newAppointment);
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@PathVariable("id") Long id, @RequestBody Appointment newInstance) {
+        AppointmentPreconditions.checkNotNull(newInstance);
+        AppointmentPreconditions.checkFound(service.findById(newInstance.getId()));
+        service.update(newInstance);
     }
-    */
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable("id") Integer id) {
+        service.deleteById(id);
+    }
 }
