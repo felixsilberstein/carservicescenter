@@ -42,27 +42,29 @@ public class RandomSchedulerConfig implements SchedulingConfigurer {
      */
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        taskRegistrar.setScheduler(taskExecutor());
-        taskRegistrar.addTriggerTask(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Appointment a = chaos.buildRandomAppointment();
-                        serviceAppointment.create(a);
+        if (chaos.isOn()) {
+            taskRegistrar.setScheduler(taskExecutor());
+            taskRegistrar.addTriggerTask(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            Appointment a = chaos.buildRandomAppointment();
+                            serviceAppointment.create(a);
+                        }
+                    },
+                    new Trigger() {
+                        @Override
+                        public Date nextExecutionTime(TriggerContext triggerContext) {
+                            Calendar nextExecutionTime = new GregorianCalendar();
+                            Date lastActualExecutionTime = triggerContext.lastActualExecutionTime();
+                            nextExecutionTime.setTime(lastActualExecutionTime != null ? lastActualExecutionTime : new Date());
+                            int nextInterval = ThreadLocalRandom.current().nextInt(1000, 10000);
+                            nextExecutionTime.add(Calendar.MILLISECOND, nextInterval);
+                            logger.info(String.format("Next random appointment will be created on: ", nextExecutionTime));
+                            return nextExecutionTime.getTime();
+                        }
                     }
-                },
-                new Trigger() {
-                    @Override
-                    public Date nextExecutionTime(TriggerContext triggerContext) {
-                        Calendar nextExecutionTime =  new GregorianCalendar();
-                        Date lastActualExecutionTime = triggerContext.lastActualExecutionTime();
-                        nextExecutionTime.setTime(lastActualExecutionTime != null ? lastActualExecutionTime : new Date());
-                        int nextInterval = ThreadLocalRandom.current().nextInt(1000, 10000);
-                        nextExecutionTime.add(Calendar.MILLISECOND, nextInterval);
-                        logger.info(String.format("Next random appointment will be created on: ", nextExecutionTime));
-                        return nextExecutionTime.getTime();
-                    }
-                }
-        );
+            );
+        }
     }
 }

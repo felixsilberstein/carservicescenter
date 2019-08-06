@@ -24,12 +24,14 @@ public class Chaos {
     @Value("#{T(java.util.Arrays).asList('${chaos.top-names}')}")
     List<String> customerNames;
 
+    public Boolean isOn() {
+        return on;
+    }
+
+    @Value("#{${chaos.switch}}")
+    Boolean on;
 
     public Appointment buildRandomAppointment() {
-        logger.info(String.valueOf(serviceTypes));
-        logger.info(String.valueOf(customerNames));
-        logger.info(String.valueOf(carModels));
-
         Appointment appointment = new Appointment();
 
         int mechanicId = ThreadLocalRandom.current().nextInt(1, 10);
