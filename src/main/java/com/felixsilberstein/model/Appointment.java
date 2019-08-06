@@ -4,24 +4,31 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.felixsilberstein.util.Format;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Appointment implements Serializable {
-    public Appointment(Integer id, String customerName, String carId) {
-        this.id = id;
-        CustomerName = customerName;
-        CarId = carId;
-    }
+
     public Appointment() {
 
+    }
+
+    public Appointment(int id, Timestamp start, Timestamp end, int service_type_id, int mechanic_id, String customerName, String carId) {
+        this.id = id;
+        this.customerName = customerName;
+        this.carId = carId;
+        this.startDateTime = new Date(start.getTime());
+        this.endDateTime = new Date(end.getTime());
+        this.mechanic = mechanic_id;
+        this.serviceType = service_type_id;
     }
 
     @Override
     public String toString() {
         return "Appointment{" +
                 "id=" + id +
-                ", CustomerName='" + CustomerName + '\'' +
-                ", CarId='" + CarId + '\'' +
+                ", CustomerName='" + customerName + '\'' +
+                ", CarId='" + carId + '\'' +
                 ", startDateTime=" + Format.Date2MySQLTimestamp(startDateTime) +
                 ", endDateTime=" + Format.Date2MySQLTimestamp(endDateTime) +
                 ", serviceType=" + serviceType +
@@ -30,8 +37,8 @@ public class Appointment implements Serializable {
     }
 
     private Integer id;
-    private String CustomerName;
-    private String CarId;
+    private String customerName;
+    private String carId;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="America/New_York")
     private Date startDateTime;
@@ -77,19 +84,19 @@ public class Appointment implements Serializable {
 
 
     public String getCustomerName() {
-        return CustomerName;
+        return customerName;
     }
 
     public void setCustomerName(String customerName) {
-        CustomerName = customerName;
+        this.customerName = customerName;
     }
 
     public String getCarId() {
-        return CarId;
+        return carId;
     }
 
     public void setCarId(String carId) {
-        CarId = carId;
+        this.carId = carId;
     }
 
 
