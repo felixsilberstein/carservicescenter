@@ -5,8 +5,8 @@ import com.felixsilberstein.model.Appointment;
 
 import java.util.List;
 
-public interface Carservices{
-    AppointmentRepository getAppointmentRepository();
+public interface ServiceAppointment {
+
     List<Appointment> findAll();
 
     Appointment findById(Integer id);

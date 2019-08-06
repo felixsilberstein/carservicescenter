@@ -1,14 +1,16 @@
-package com.felixsilberstein;
+package com.felixsilberstein.api;
 
 import com.felixsilberstein.model.Appointment;
-import com.felixsilberstein.service.Carservices;
+import com.felixsilberstein.service.ServiceAppointment;
 import com.felixsilberstein.util.AppointmentPreconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Defines API endpoint for appointment management
@@ -19,7 +21,8 @@ import java.util.List;
 public class AppointmentsController {
 
     @Autowired
-    private Carservices service;
+    private ServiceAppointment service;
+
 
     /**
      * Retrieves a list for all Appointments

@@ -1,7 +1,5 @@
 package com.felixsilberstein.util;
 
-import com.felixsilberstein.exception.AppointmentUnavailaleException;
-
 /**
  * Methods to be used before the main processing takes place.
  * If the Precondition fails, an {@link HttpStatus} code is thrown
@@ -16,11 +14,11 @@ public class AppointmentPreconditions {
      * Used when adding/creating items
      * @param resource
      *            has value true if found, otherwise false
-     * @throws AppointmentUnavailaleException
+     * @throws AppointmentUnavailableException
      */
     public static <T> T checkNotFound(final T resource) {
         if (resource != null) {
-            throw new AppointmentUnavailaleException();
+            throw new AppointmentUnavailableException();
         }
         return resource;
     }
@@ -29,11 +27,11 @@ public class AppointmentPreconditions {
      * Used when adding/creating items
      * @param resource
      *            has value true if found, otherwise false
-     * @throws AppointmentUnavailaleException
+     * @throws AppointmentUnavailableException
      */
     public static <T> T checkFound(final T resource) {
         if (resource == null) {
-            throw new AppointmentUnavailaleException();
+            throw new AppointmentUnavailableException();
         }
         return resource;
     }

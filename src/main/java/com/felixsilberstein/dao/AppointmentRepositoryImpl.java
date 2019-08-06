@@ -20,26 +20,20 @@ import static com.felixsilberstein.util.Format.Date2MySQLTimestamp;
 
 @Repository
 public class AppointmentRepositoryImpl implements AppointmentRepository {
-    Logger logger = LoggerFactory.getLogger(AppointmentRepositoryImpl.class);
+    Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public List findAll() {
+    public List<Appointment> findAll() {
         return jdbcTemplate.query("SELECT * from appointments",
                 (rs, rowNum) -> new Appointment(rs.getInt("id"), rs.getString("CustomerName"), rs.getString("CarId")));
     }
 
     @Override
     public Appointment findById(Integer id) {
-        List<Appointment> found = jdbcTemplate.query("SELECT * from appointments where id=?", new Object[] { id },
+        List<Appointment> found = jdbcTemplate.query("SELECT * from appointments where id=?", new Object[]{id},
                 new RowMapper() {
-            /*
-                    @Override
-                    public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return null;
-                    }*/
-
                     @Override
                     public Object mapRow(ResultSet rs, int i) throws SQLException {
                         Appointment a = new Appointment();
@@ -53,13 +47,14 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
                         return a;
                     }
                 });
-
+        logger.info(String.valueOf(found));
         if (found.isEmpty()) {
             return null;
         } else if (found.size() == 1) {
             return found.get(0);
         } else {
-            // list contains more than 1 elements, warn about it
+            // list contains more than 1 elements, warn about it and return the first one
+            // TODO: Optimize case solution
             logger.error(String.format("Multiple appointments items found when expecting one for id=%d. Returning the first one", id));
             return found.get(0);
         }
@@ -67,8 +62,6 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
 
     @Override
     public Integer create(Appointment appointment) {
-//        logger.info(appointment.toString());
-
         String INSERT_SQL = "INSERT INTO `carservices`.`appointments` ( `start`, `end`, `service_type_id`, `mechanic_id`, `CustomerName`, `CarId`) " +
                 "VALUES ( ?, ?, ?, ?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
