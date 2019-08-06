@@ -4,12 +4,13 @@ import com.felixsilberstein.dao.AppointmentRepository;
 import com.felixsilberstein.model.Appointment;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServiceAppointment {
 
     List<Appointment> findAll();
 
-    Appointment findById(Integer id);
+    Optional<Appointment> findById(Integer id);
 
     Integer create(Appointment newAppointment);
 

@@ -3,14 +3,16 @@ package com.felixsilberstein.api;
 import com.felixsilberstein.model.Appointment;
 import com.felixsilberstein.service.ServiceAppointment;
 import com.felixsilberstein.util.AppointmentPreconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Defines API endpoint for appointment management
@@ -19,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/appointments")
 public class AppointmentsController {
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ServiceAppointment service;
@@ -44,7 +47,7 @@ public class AppointmentsController {
      */
     @GetMapping(value = "/{id}")
     public Appointment findAppointment(@PathVariable(name="id", required=true) Integer id) {
-        return service.findById(id);
+        return service.findById(id).orElseThrow(()-> new AppointmentNotFoundException(id));
     }
 
     /**

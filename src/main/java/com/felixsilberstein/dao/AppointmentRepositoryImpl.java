@@ -4,7 +4,6 @@ import com.felixsilberstein.model.Appointment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 import static com.felixsilberstein.util.Format.Date2MySQLTimestamp;
 
@@ -27,15 +27,23 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     @Override
     public List<Appointment> findAll() {
         return jdbcTemplate.query("SELECT * from appointments",
-                (rs, rowNum) -> new Appointment(rs.getInt("id"), rs.getString("CustomerName"), rs.getString("CarId")));
+                (rs, rowNum) -> new Appointment(
+                        rs.getInt("id"),
+                        rs.getTimestamp("start"),
+                        rs.getTimestamp("end"),
+                        rs.getInt("service_type_id"),
+                        rs.getInt("mechanic_id"),
+                        rs.getString("CustomerName"),
+                        rs.getString("CarId")
+                ));
     }
 
     @Override
-    public Appointment findById(Integer id) {
+    public Optional<Appointment> findById(Integer id) {
         List<Appointment> found = jdbcTemplate.query("SELECT * from appointments where id=?", new Object[]{id},
                 new RowMapper() {
                     @Override
-                    public Object mapRow(ResultSet rs, int i) throws SQLException {
+                    public Appointment mapRow(ResultSet rs, int i) throws SQLException {
                         Appointment a = new Appointment();
                         a.setId(rs.getInt("id"));
                         a.setStartDateTime(rs.getTimestamp("start"));
@@ -47,16 +55,16 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
                         return a;
                     }
                 });
-        logger.info(String.valueOf(found));
+
         if (found.isEmpty()) {
-            return null;
+            return Optional.ofNullable(null);
         } else if (found.size() == 1) {
-            return found.get(0);
+            return Optional.ofNullable(found.get(0));
         } else {
             // list contains more than 1 elements, warn about it and return the first one
             // TODO: Optimize case solution
             logger.error(String.format("Multiple appointments items found when expecting one for id=%d. Returning the first one", id));
-            return found.get(0);
+            return Optional.ofNullable(found.get(0));
         }
     }
 
