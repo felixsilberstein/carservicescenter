@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.felixsilberstein.util.Format;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -21,6 +23,18 @@ public class Appointment implements Serializable {
         this.endDateTime = new Date(end.getTime());
         this.mechanic = mechanic_id;
         this.serviceType = service_type_id;
+    }
+
+    public static Appointment fromResultSet(ResultSet rs, int rowNum) throws SQLException {
+        return new Appointment(
+                rs.getInt("id"),
+                rs.getTimestamp("start"),
+                rs.getTimestamp("end"),
+                rs.getInt("service_type_id"),
+                rs.getInt("mechanic_id"),
+                rs.getString("CustomerName"),
+                rs.getString("CarId")
+        );
     }
 
     @Override

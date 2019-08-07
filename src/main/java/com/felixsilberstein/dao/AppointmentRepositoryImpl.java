@@ -24,47 +24,27 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+
     @Override
     public List<Appointment> findAll() {
         return jdbcTemplate.query("SELECT * from appointments",
-                (rs, rowNum) -> new Appointment(
-                        rs.getInt("id"),
-                        rs.getTimestamp("start"),
-                        rs.getTimestamp("end"),
-                        rs.getInt("service_type_id"),
-                        rs.getInt("mechanic_id"),
-                        rs.getString("CustomerName"),
-                        rs.getString("CarId")
-                ));
+                (rs, rowNum) -> Appointment.fromResultSet(rs, rowNum));
     }
 
     @Override
     public Optional<Appointment> findById(Integer id) {
-        List<Appointment> found = jdbcTemplate.query("SELECT * from appointments where id=?", new Object[]{id},
-                new RowMapper() {
-                    @Override
-                    public Appointment mapRow(ResultSet rs, int i) throws SQLException {
-                        Appointment a = new Appointment();
-                        a.setId(rs.getInt("id"));
-                        a.setStartDateTime(rs.getTimestamp("start"));
-                        a.setEndDateTime(rs.getTimestamp("end"));
-                        a.setServiceType(rs.getInt("service_type_id"));
-                        a.setMechanic(rs.getInt("mechanic_id"));
-                        a.setCustomerName(rs.getString("CustomerName"));
-                        a.setCarId(rs.getString("CarId"));
-                        return a;
-                    }
-                });
+        List found = jdbcTemplate.query("SELECT * from appointments where id=?", new Object[]{id},
+                (rs, rowNum) -> Appointment.fromResultSet(rs, rowNum));
 
         if (found.isEmpty()) {
             return Optional.ofNullable(null);
         } else if (found.size() == 1) {
-            return Optional.ofNullable(found.get(0));
+            return Optional.ofNullable((Appointment)found.get(0));
         } else {
             // list contains more than 1 elements, warn about it and return the first one
             // TODO: Optimize case solution
             logger.error(String.format("Multiple appointments items found when expecting one for id=%d. Returning the first one", id));
-            return Optional.ofNullable(found.get(0));
+            return Optional.ofNullable((Appointment)found.get(0));
         }
     }
 
