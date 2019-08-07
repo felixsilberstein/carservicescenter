@@ -8,8 +8,17 @@ Car services center appointments REST API is a java/spring REST API to manage ap
 - maven
 
 
-## Installation
+## Deployment
 
+- Setup docker bridged network
+    
+    `docker network create --driver bridge appointments-net`
+    
+- Run the db container:
+    ```shell
+    docker run --name appointments-db --net=appointments-net -e MYSQL_ROOT_PASSWORD=123 -v <path to db/data>:/var/lib/mysql -d mysql
+    ```
+    
 Download the latest stable release
 build with maven:
 ```bash
@@ -44,3 +53,32 @@ Please make sure to update tests as appropriate.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+
+# References:
+**Guides:**
+- https://www.baeldung.com/spring-boot-sqlite
+- https://spring.io/guides/gs/spring-boot-docker/
+- https://spring.io/guides/gs/rest-service/
+- https://stackify.com/guide-docker-java/
+- https://www.mkyong.com/spring-boot/spring-rest-hello-world-example/
+
+Cache:
+- https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-caching.html#boot-features-caching-provider-redis
+
+MySql:
+- https://dev.mysql.com/doc/refman/5.7/en/
+
+Docker:
+- https://stackify.com/guide-docker-java/
+- https://docs.docker.com/v17.09/engine/userguide/networking/#user-defined-networks
+- https://docs.docker.com/samples/library/mysql/
+
+Logging:
+- https://docs.spring.io/spring-boot/docs/current/reference/html/howto-logging.html
+
+DEvOps:
+- https://medium.com/containerum/do-i-need-ci-cd-and-what-tool-should-i-choose-7f0da4bf38fc
+
+Authentication:
+- https://medium.com/better-programming/secure-a-spring-boot-rest-api-with-json-web-token-reference-to-angular-integration-e57a25806c50
