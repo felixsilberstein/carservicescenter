@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-<!--        <file>/var/log/Application/application.log</file>-->
-        <file>/var/logs/application/application.log</file>
-        <append>true</append>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-7d{yyyy-MM-dd HH:mm:ss:SSS} %m%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
     </root>
 </configuration>
