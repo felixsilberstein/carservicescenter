@@ -32,19 +32,19 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     }
 
     @Override
-    public Optional<Appointment> findById(Integer id) {
+    public Appointment findById(Integer id) {
         List found = jdbcTemplate.query("SELECT * from appointments where id=?", new Object[]{id},
                 (rs, rowNum) -> Appointment.fromResultSet(rs, rowNum));
 
         if (found.isEmpty()) {
-            return Optional.ofNullable(null);
+            return null;
         } else if (found.size() == 1) {
-            return Optional.ofNullable((Appointment)found.get(0));
+            return (Appointment) found.get(0);
         } else {
             // list contains more than 1 elements, warn about it and return the first one
             // TODO: Optimize case solution
             logger.error(String.format("Multiple appointments items found when expecting one for id=%d. Returning the first one", id));
-            return Optional.ofNullable((Appointment)found.get(0));
+            return (Appointment)found.get(0);
         }
     }
 

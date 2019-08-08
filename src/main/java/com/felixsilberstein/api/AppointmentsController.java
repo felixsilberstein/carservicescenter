@@ -47,7 +47,7 @@ public class AppointmentsController {
      */
     @GetMapping(value = "/{id}")
     public Appointment findAppointment(@PathVariable(name="id", required=true) Integer id) {
-        return service.findById(id).orElseThrow(()-> new AppointmentNotFoundException(id));
+        return service.findById(id);
     }
 
     /**

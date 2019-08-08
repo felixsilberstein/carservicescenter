@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface AppointmentRepository {
     List<Appointment> findAll();
 
-    Optional<Appointment> findById(Integer id);
+    Appointment findById(Integer id);
 
     Integer create(Appointment newAppointment);
 

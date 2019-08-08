@@ -19,7 +19,7 @@ public class ServiceAppointmentImpl implements ServiceAppointment {
     }
 
     @Override
-    public Optional<Appointment> findById(Integer id) {
+    public Appointment findById(Integer id) {
         return appointmentRepository.findById(id);
     }
 

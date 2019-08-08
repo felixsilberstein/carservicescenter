@@ -10,7 +10,7 @@ public interface ServiceAppointment {
 
     List<Appointment> findAll();
 
-    Optional<Appointment> findById(Integer id);
+    Appointment findById(Integer id);
 
     Integer create(Appointment newAppointment);
 
