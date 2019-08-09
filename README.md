@@ -2,34 +2,55 @@
 
 Car services center appointments REST API is a java/spring REST API to manage appointments for "the Car services center"
 
-## Requires
 
+## Requirements
+- MySQL
 - java 1.8+
 - maven
+- docker if using docker images
 
+## First time setup
 
+#### Server Setup
+    - Instal and secure mysql
+    - Run the SQL file: db.sql
+    - Install Java 1.8+
+    - Instal Maven
+
+### Docker setup
+- Setup docker bridged network:
+    ```shell script
+    >docker network create --driver bridge appointments-net
+    ```
+- Pull and run the images/containers:
+```shell script
+  >docker login
+  >docker pull fxarte/appointments-db:latest
+  >docker pull fxarte/carservices-appointments:latest
+  >docker run --name appointment-db --net=appointments-net -e MYSQL_ROOT_PASSWORD=<my root password> -v <host path to db data>:/var/lib/mysql -d fxarte/appointments-db:latest
+  >docker run  --name=api --net=appointments-net --env-file .env -p 8080:8080 -d carservices-appointments:latest
+
+```
 ## Deployment
 
-- Setup docker bridged network
-    
-    `docker network create --driver bridge appointments-net`
-    
-- Run the db container:
-    ```shell
-    docker run --name appointments-db --net=appointments-net -e MYSQL_ROOT_PASSWORD=123 -v <path to db/data>:/var/lib/mysql -d mysql
-    ```
-    
-Download the latest stable release
-build with maven:
-```bash
-mvn package
-```
-run the jar:
-```bash
-java -jar target/car-service-center-<version>.jar
+### Server
+- Connect to your server and cd to the application folder
+- Pull the code from source control
+- package with maven
+- run the application:
+    ```shell script
+    java -jar target/car-service-center-<version>.jar
+  ```
+
+### Docker
+```shell script
+  docker pull fxarte/appointments-db:latest
+  docker pull fxarte/carservices-appointments:latest
+  docker run --name appointment-db --net=appointments-net -e MYSQL_ROOT_PASSWORD=<my root password> -v <host path to db data>:/var/lib/mysql -d fxarte/appointments-db:latest
+  docker run  --name=api --net=appointments-net --env-file .env -p 8080:8080 -d carservices-appointments:latest
 ```
 
-## Usage
+## API Usage
 
 ```bash
 # retrieve an appointment
@@ -73,6 +94,7 @@ Docker:
 - https://stackify.com/guide-docker-java/
 - https://docs.docker.com/v17.09/engine/userguide/networking/#user-defined-networks
 - https://docs.docker.com/samples/library/mysql/
+- https://spring.io/guides/gs/spring-boot-docker/
 
 Logging:
 - https://docs.spring.io/spring-boot/docs/current/reference/html/howto-logging.html
@@ -82,3 +104,8 @@ DEvOps:
 
 Authentication:
 - https://medium.com/better-programming/secure-a-spring-boot-rest-api-with-json-web-token-reference-to-angular-integration-e57a25806c50
+
+Testing:
+- https://junit.org/junit5/docs/current/user-guide/#overview
+- https://www.vogella.com/tutorials/Mockito/article.html
+- https://site.mockito.org/
