@@ -3,51 +3,35 @@ package com.felixsilberstein.api;
 
 import com.felixsilberstein.dao.AppointmentRepository;
 import com.felixsilberstein.model.Appointment;
-import org.junit.Assert;
-import org.junit.Before;
+import com.felixsilberstein.service.ServiceAppointment;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.Timestamp;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-
+@RunWith(MockitoJUnitRunner.class)
 public class AppointmentsControllerTest {
 
     @Mock
     private AppointmentRepository mockRepository;
 
-//    private Appointment appointment;
-    private Integer one;
-
     @BeforeAll
     public void setUp() {
-        /*appointment = new Appointment(
-                5,
-                Timestamp.valueOf("2019-08-31 10:00:00"),
-                Timestamp.valueOf("2019-08-31 11:00:00"),
-                5,
-                1,
-                "Test1User",
-                "Model T"
-        );
-        one = new Integer(1);
-        System.out.println("------------------------");
-        */
-
+        MockitoAnnotations.initMocks(this);
     }
 
-    /**
-     * Given a known appointment retrive by its id from DB and assert User names are the same
-     */
     @Test
-//    @DisplayName("Test appointment retrieved from the data base")
-    public void getAppointmentById() throws Exception {
-        AppointmentRepository mr = mock(AppointmentRepository.class);
+    public void getAppointmentByIdTest() throws Exception {
         Appointment appointment = new Appointment(
                 5,
                 Timestamp.valueOf("2019-08-31 10:00:00"),
@@ -58,10 +42,16 @@ public class AppointmentsControllerTest {
                 "Model T"
         );
 
-        Mockito.when(mr.findById(Mockito.anyInt())).thenReturn(appointment);
+        when(mockRepository.findById(Mockito.anyInt())).thenReturn(appointment);
 
-        Appointment dbAppointment = mr.findById(appointment.getId());
+        Appointment dbAppointment = mockRepository.findById(1);
         assertEquals("Test1User", dbAppointment.getCustomerName());
         assertEquals("Model T", dbAppointment.getCarId());
+    }
+
+    @Test(expected = AppointmentNotFoundException.class)
+    public void getNoneExistingAppointmentTest() {
+        when(mockRepository.findById(Mockito.anyInt())).thenThrow(AppointmentNotFoundException.class);
+        mockRepository.findById(1);
     }
 }
