@@ -4,6 +4,7 @@ package com.felixsilberstein.api;
 import com.felixsilberstein.dao.AppointmentRepository;
 import com.felixsilberstein.model.Appointment;
 import com.felixsilberstein.service.ServiceAppointment;
+import com.felixsilberstein.service.ServiceAppointmentImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +26,9 @@ public class AppointmentsControllerTest {
     @Mock
     private AppointmentRepository mockRepository;
 
+    @InjectMocks
+    private ServiceAppointmentImpl mockService;
+
     @BeforeAll
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -44,7 +48,7 @@ public class AppointmentsControllerTest {
 
         when(mockRepository.findById(Mockito.anyInt())).thenReturn(appointment);
 
-        Appointment dbAppointment = mockRepository.findById(1);
+        Appointment dbAppointment = mockService.findById(1);
         assertEquals("Test1User", dbAppointment.getCustomerName());
         assertEquals("Model T", dbAppointment.getCarId());
     }
@@ -52,6 +56,6 @@ public class AppointmentsControllerTest {
     @Test(expected = AppointmentNotFoundException.class)
     public void getNoneExistingAppointmentTest() {
         when(mockRepository.findById(Mockito.anyInt())).thenThrow(AppointmentNotFoundException.class);
-        mockRepository.findById(1);
+        mockService.findById(1);
     }
 }

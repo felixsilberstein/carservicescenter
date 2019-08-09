@@ -2,6 +2,8 @@ package com.felixsilberstein.service;
 
 import com.felixsilberstein.model.Appointment;
 import com.felixsilberstein.dao.AppointmentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +11,15 @@ import java.util.*;
 
 @Service
 public class ServiceAppointmentImpl implements ServiceAppointment {
+    Logger logger = LoggerFactory.getLogger(getClass());
+
+    private final AppointmentRepository appointmentRepository;
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
+    public ServiceAppointmentImpl(final AppointmentRepository appointmentRepository) {
+        this.appointmentRepository = appointmentRepository;
+    }
+
 
     @Override
     public List<Appointment> findAll() {
@@ -20,6 +28,7 @@ public class ServiceAppointmentImpl implements ServiceAppointment {
 
     @Override
     public Appointment findById(Integer id) {
+        logger.info(String.format("Finding id=%d", id));
         return appointmentRepository.findById(id);
     }
 
